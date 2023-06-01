@@ -1,0 +1,1076 @@
+{
+	"info": {
+		"_postman_id": "a190d57f-6470-46e4-a07c-7bf561d9094f",
+		"name": "Nginx Proxy Manager",
+		"description": "[https://github.com/NginxProxyManager/nginx-proxy-manager/tree/develop/backend/schema](https://github.com/NginxProxyManager/nginx-proxy-manager/tree/develop/backend/schema)\n\nTo be able to generate a new auth token it is mandatory to run \"Create Token\" POST endpoint first; all other endpoints will then automatically use the generated token",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4563297"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "Get all web gui users"
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"test\",\r\n    \"nickname\": \"test\",\r\n    \"email\": \"test@test.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "create a new web gui user"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"test\",\r\n    \"nickname\": \"test\",\r\n    \"email\": \"test@test.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/{user_id}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"{user_id}"
+							]
+						},
+						"description": "Update existing web gui user"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/{user_id}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"{user_id}"
+							]
+						},
+						"description": "Delete an existing web gui user"
+					},
+					"response": []
+				},
+				{
+					"name": "Set Password",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"type\": \"password\",\r\n    \"secret\": \"test1test2@\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/{user_id}/auth",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"{user_id}",
+								"auth"
+							]
+						},
+						"description": "Change web gui user password"
+					},
+					"response": []
+				},
+				{
+					"name": "Set Permissions",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"visibility\": \"(all|user)\",\r\n    \"access_lists\": \"(hidden|view|manage)\",\r\n    \"dead_hosts\": \"(hidden|view|manage)\",\r\n    \"proxy_hosts\": \"(hidden|view|manage)\",\r\n    \"redirection_hosts\": \"(hidden|view|manage)\",\r\n    \"streams\": \"(hidden|view|manage)\",\r\n    \"certificates\": \"(hidden|view|manage)\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/{user_id}/permissions",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"{user_id}",
+								"permissions"
+							]
+						},
+						"description": "Set specific permissions to a web gui user"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tokens",
+			"item": [
+				{
+					"name": "Create Token",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = pm.response.json();",
+									"var token = res.token;",
+									"pm.collectionVariables.set(\"bearer_token\", token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"identity\":\"\",\r\n   \"secret\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/tokens",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tokens"
+							]
+						},
+						"description": "**identity**: web gui email\n\n**secret**: web gui password"
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/tokens",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tokens"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var res = pm.response.json();",
+							"var token = res.token;",
+							"pm.collectionVariables.set(\"bearer_token\", token);"
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Streams",
+			"item": [
+				{
+					"name": "All Streams",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/nginx/streams",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"streams"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Stream",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"incoming_port\": 0,\r\n    \"forwarding_host\": \"\",\r\n    \"forwarding_port\": \"\",\r\n    \"tcp_forwarding\": \"\",\r\n    \"udp_forwarding\": \"\",\r\n    \"meta\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/nginx/streams",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"streams"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Stream",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"incoming_port\": 0,\r\n    \"forwarding_host\": \"\",\r\n    \"forwarding_port\": \"\",\r\n    \"tcp_forwarding\": \"\",\r\n    \"udp_forwarding\": \"\",\r\n    \"meta\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/nginx/streams/{stream_id}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"streams",
+								"{stream_id}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Stream",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/nginx/streams/{stream_id}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"streams",
+								"{stream_id}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Disable Stream",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/nginx/streams/{stream_id}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"streams",
+								"{stream_id}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Settings",
+			"item": [
+				{
+					"name": "All Settings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/settings",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"settings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a setting",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"value\": \"\",\r\n    \"meta\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/settings",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"settings"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Redirection Hosts",
+			"item": [
+				{
+					"name": "All Redirection Hosts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/nginx/redirection-hosts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"redirection-hosts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Redirection Host",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"domain_names\": [],\r\n    \"forward_http_code\": 0,\r\n    \"forward_scheme\": \"\",\r\n    \"forward_domain_name\": \"\",\r\n    \"preserve_path\": \"\",\r\n    \"certificate_id\": \"\",\r\n    \"ssl_forced\": true,\r\n    \"hsts_enabled\": true,\r\n    \"hsts_subdomains\": true,\r\n    \"http2_support\": true,\r\n    \"block_exploits\": true,\r\n    \"advanced_config\": \"\",\r\n    \"meta\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/nginx/redirection-hosts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"redirection-hosts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Redirection Host",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"domain_names\": [],\r\n    \"forward_http_code\": 0,\r\n    \"forward_scheme\": \"\",\r\n    \"forward_domain_name\": \"\",\r\n    \"preserve_path\": \"\",\r\n    \"certificate_id\": \"\",\r\n    \"ssl_forced\": true,\r\n    \"hsts_enabled\": true,\r\n    \"hsts_subdomains\": true,\r\n    \"http2_support\": true,\r\n    \"block_exploits\": true,\r\n    \"advanced_config\": \"\",\r\n    \"meta\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/nginx/redirection-hosts/{redirection_host_id}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"redirection-hosts",
+								"{redirection_host_id}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Redirection Host",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/nginx/redirection-hosts/{redirection_host_id}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"redirection-hosts",
+								"{redirection_host_id}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Disable Redirection Host",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/nginx/redirection-hosts/{redirection_host_id}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"redirection-hosts",
+								"{redirection_host_id}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Proxy Hosts",
+			"item": [
+				{
+					"name": "All Proxy Hosts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/nginx/proxy-hosts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"proxy-hosts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Proxy Hosts",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"domain_names\": [\r\n        \"cicd.omafoligno.it\"\r\n    ],\r\n    \"forward_host\": \"192.168.100.192\",\r\n    \"forward_port\": 8000,\r\n    \"access_list_id\": 0,\r\n    \"certificate_id\": 2,\r\n    \"ssl_forced\": 1,\r\n    \"caching_enabled\": 0,\r\n    \"block_exploits\": 1,\r\n    \"advanced_config\": \"\",\r\n    \"meta\": {\r\n        \"letsencrypt_agree\": false,\r\n        \"dns_challenge\": false,\r\n        \"nginx_online\": true,\r\n        \"nginx_err\": null\r\n    },\r\n    \"allow_websocket_upgrade\": 1,\r\n    \"http2_support\": 1,\r\n    \"forward_scheme\": \"http\",\r\n    \"enabled\": 1,\r\n    \"locations\": [],\r\n    \"hsts_enabled\": 1,\r\n    \"hsts_subdomains\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/nginx/proxy-hosts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"proxy-hosts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Proxy Hosts",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"domain_names\": [],\r\n    \"forward_scheme\": \"\",\r\n    \"forward_host\": \"\",\r\n    \"forward_port\": \"\",\r\n    \"certificate_id\": \"\",\r\n    \"ssl_forced\": true,\r\n    \"hsts_enabled\": true,\r\n    \"hsts_subdomains\": true,\r\n    \"http2_support\": true,\r\n    \"block_exploits\": true,\r\n    \"caching_enabled\": true,\r\n    \"allow_websocket_upgrade\": true,\r\n    \"access_list_id\": 0,\r\n    \"advanced_config\": \"\",\r\n    \"enables\": true,\r\n    \"meta\": \"\",\r\n    \"locations\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/nginx/proxy-hosts/{proxy_host_id}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"proxy-hosts",
+								"{proxy_host_id}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Proxy Hosts",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/nginx/proxy-hosts/{proxy_host_id}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"proxy-hosts",
+								"{proxy_host_id}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Disable Proxy Hosts",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/nginx/proxy-hosts/{proxy_host_id}/disable",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"proxy-hosts",
+								"{proxy_host_id}",
+								"disable"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Enable Proxy Hosts",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/nginx/proxy-hosts/{proxy_host_id}/enable",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"proxy-hosts",
+								"{proxy_host_id}",
+								"enable"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dead Hosts",
+			"item": [
+				{
+					"name": "All Dead Hosts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/nginx/dead-hosts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"dead-hosts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Dead Host",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"domain_names\": [],\r\n    \"certificate_id\": \"\",\r\n    \"ssl_forced\": true,\r\n    \"hsts_enabled\": true,\r\n    \"hsts_subdomains\": \"\",\r\n    \"http2_support\": true,\r\n    \"advanced_config\": \"\",\r\n    \"meta\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/nginx/dead-hosts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"dead-hosts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Dead Host",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"domain_names\": [],\r\n    \"certificate_id\": \"\",\r\n    \"ssl_forced\": true,\r\n    \"hsts_enabled\": true,\r\n    \"hsts_subdomains\": \"\",\r\n    \"http2_support\": true,\r\n    \"advanced_config\": \"\",\r\n    \"meta\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/nginx/dead-hosts/{dead_host_id}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"dead-hosts",
+								"{dead_host_id}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Dead Host",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/nginx/dead-hosts/{dead_host_id}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"dead-hosts",
+								"{dead_host_id}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Disable Dead Host",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/nginx/dead-hosts/{dead_host_id}/disable",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"dead-hosts",
+								"{dead_host_id}",
+								"disable"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Enable Dead Host",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/nginx/dead-hosts/{dead_host_id}/enable",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"dead-hosts",
+								"{dead_host_id}",
+								"enable"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Certificates",
+			"item": [
+				{
+					"name": "All Certificates",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/nginx/certificates",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"certificates"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validate Certificate",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "certificate",
+									"type": "file",
+									"src": "/C:/Users/dnvit/Downloads/commandware.com.cer"
+								},
+								{
+									"key": "certificate_key",
+									"type": "file",
+									"src": "/C:/Users/dnvit/Downloads/commandware.com.key"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/nginx/certificates/validate",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"certificates",
+								"validate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Certificate",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"provider\": \"other\",\r\n    \"nice_name\": \"Custom Certificate\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/nginx/certificates",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"certificates"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Certificate",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Referer",
+								"value": "{{base_url}}/nginx/certificates",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "certificate",
+									"description": ".cer or .pem file",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "certificate_key",
+									"description": ".key file",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/nginx/certificates/{certificate_id}/upload",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"certificates",
+								"{certificate_id}",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Certificate",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/nginx/certificates/{certificate_id}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"certificates",
+								"{certificate_id}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test SSL Certificate",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/nginx/certificates/{certificate_id}/test-http",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"certificates",
+								"{certificate_id}",
+								"test-http"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Access Lists",
+			"item": [
+				{
+					"name": "All Access Lists",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/nginx/access-lists",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"nginx",
+								"access-lists"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{bearer_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "bearer_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "base_url",
+			"value": "http://localhost:81/api",
+			"type": "string"
+		}
+	]
+}
